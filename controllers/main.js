@@ -1,4 +1,4 @@
-// Things to do :
+// Things to do in Login:
 // 1. Check username, password in post request i.e. login.
 //      Options :
 //        a. Mongoose Validation
@@ -6,9 +6,7 @@
 //        c. Check in controller (implemented below)
 // 2. If exists - create a new JWT token.
 // 3. Send the token to front-end.
-// 4. Setup authentication so only that only the request with JWT can access the dashboard request.
 // ======================================================================================================
-
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const CustomAPIError = require('../errors/custom-error');
@@ -30,24 +28,12 @@ const login = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  console.log(req.headers);
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new CustomAPIError('Authorization Failed.', 401);
-  }
-  const token = authHeader.split(' ')[1];
-  //console.log(token);
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //console.log(decoded);
-    const luckyNumber = Math.floor(Math.random() * 100);
-    res.status(200).json({
-      msg: `Hello ${decoded.username}`,
-      secret: `Here is your authorized data, your lucky number is ${luckyNumber}`,
-    });
-  } catch (error) {
-    throw new CustomAPIError('Not Authorized to access this route.', 401);
-  }
+  console.log(req.user);
+  const luckyNumber = Math.floor(Math.random() * 100);
+  res.status(200).json({
+    msg: `Hello ${req.user.username}`,
+    secret: `Here is your authorized data, your lucky number is ${luckyNumber}`,
+  });
 };
 
 module.exports = { login, dashboard };
