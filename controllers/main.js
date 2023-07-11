@@ -7,13 +7,15 @@
 // 2. If exists - create a new JWT token.
 // 3. Send the token to front-end.
 // ======================================================================================================
+
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const CustomAPIError = require('../errors/custom-error');
+const { BadRequest } = require('../errors');
+
 const login = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    throw new CustomAPIError('Please provide username and password.', 400);
+    throw new BadRequest('Please provide username and password.');
   }
 
   // JWT
